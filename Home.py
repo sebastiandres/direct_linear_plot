@@ -1,5 +1,9 @@
 import streamlit as st
 
+from helpers.shared_hacks import page_setup
+
+page_setup("Sensibility analysis")
+
 st.title("Direct Linear Plot")
 
 st.markdown("Select parameter estimation, data generation or both.")

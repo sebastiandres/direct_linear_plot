@@ -3,10 +3,9 @@ import pandas as pd
 import numpy as np
 from matplotlib import pyplot as plt
 
-try:
-    st.set_page_config(layout="wide")
-except:
-    pass
+from helpers.shared_hacks import page_setup
+
+page_setup("Sensibility analysis")
 
 if "parameter_checksum" not in st.session_state:
     st.session_state["parameter_checksum"] = ""

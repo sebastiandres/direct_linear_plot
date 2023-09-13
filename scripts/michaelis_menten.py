@@ -54,13 +54,15 @@ def error_analysis(Vmax, Km, mu, sigma, N):
     # Add perturbations to the data
     DLP = {"Vmax": [], "Km": []}
     LR = {"Vmax": [], "Km": []}
+    data = []
     for i in range(N):
         df_i = df.copy()
         df_i["v"] = data_perturbation(df_i["v"], mu, sigma)
         # Obtain the estimations
         solution = solver(df_i)
+        # Store the data
+        data.append(df_i)
         # Store the results
-        #print(solution)
         DLP["Vmax"].append(solution["direct_linear_plot"]["Vmax"])
         DLP["Km"].append(solution["direct_linear_plot"]["Km"])
         LR["Vmax"].append(solution["linear_regression"]["Vmax"])
@@ -69,7 +71,7 @@ def error_analysis(Vmax, Km, mu, sigma, N):
     DLP = pd.DataFrame(DLP)
     LR = pd.DataFrame(LR)        
     # Return the results
-    return DLP, LR
+    return data, DLP, LR
 
 
 def sensitivity_analysis(Vmax, Km, mu, sigma, N, e_index, e_min, e_max, n_e=20):

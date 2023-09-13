@@ -3,17 +3,14 @@ import pandas as pd
 import numpy as np
 from matplotlib import pyplot as plt
 
-try:
-    st.set_page_config(layout="wide")
-except:
-    pass
+from helpers.shared_hacks import page_setup
+
+page_setup("Error analysis")
 
 if "parameter_checksum" not in st.session_state:
     st.session_state["parameter_checksum"] = ""
-if "DLP" not in st.session_state:
-    st.session_state["DLP"] = {}
-if "LR" not in st.session_state:
-    st.session_state["LR"] = {}
+if "error_analysis_execution" not in st.session_state:
+    st.session_state["error_analysis_execution"] = {}
 
 st.subheader("Error analysis")
 st.caption("Error analysis on synthetic data generated with known parameters")
@@ -36,32 +33,35 @@ if eqn_sel == "Michaelis-Menten":
     Km = c2.number_input("Km", value=1.0)
     # Error type
     c1, c2, c3, c4 = st.columns(4)
-    mu = c1.number_input("Mean", value=0.0)
-    sigma = c2.number_input("Standard deviation", value=0.1)
+    mu = c1.number_input("Mean", value=0.0, format="%.3f")
+    sigma = c2.number_input("Standard deviation", value=0.005, format="%.3f")
     N = c3.number_input("Number of experiments", value=1000)
 
     # Create a checksum to check if the parameters have changed
     parameter_checksum = f"{eqn_sel}_{Vmax}_{Km}_{mu}_{sigma}_{N}"
     if st.session_state["parameter_checksum"] != parameter_checksum:
         st.session_state["parameter_checksum"] = parameter_checksum
-        st.session_state["DLP"] = {}
-        st.session_state["LR"] = {}
+        st.session_state["error_analysis_execution"] = {}
 
     # Generate data
     st.markdown("Click the button to generate the data")
     if st.button("Generate analysis", key="error_analysis"):
         from scripts.michaelis_menten import error_analysis
-        DLP, LR = error_analysis(Vmax, Km, mu, sigma, N)
-        # Store the results
-        st.session_state["DLP"] = DLP
-        st.session_state["LR"] = LR
+        st.session_state["error_analysis_execution"] = error_analysis(Vmax, Km, mu, sigma, N)
 
-    if len(st.session_state["DLP"]) and len(st.session_state["LR"]):
-        opt_sel = st.radio("Select option", ["Plot estimations", "Plot errors"], horizontal=True)
-        DLP = st.session_state["DLP"]
-        LR = st.session_state["LR"]
+    if st.session_state["error_analysis_execution"]:
+        opt_sel = st.radio("Select option", ["Plot syntethic data", "Plot estimations", "Plot errors"], horizontal=True)
+        data, DLP, LR = st.session_state["error_analysis_execution"]
         alpha = (1/N)**0.25
-        if opt_sel=="Plot estimations":
+        if opt_sel=="Plot syntethic data":
+            fig, ax = plt.subplots(1, 1, figsize=(12, 6))
+            for df_i in data:
+                ax.plot(df_i["s"], df_i["v"], "k.", alpha=0.25)
+            ax.set_xlabel("s")
+            ax.set_ylabel("v")
+            ax.set_title("Synthetic data")
+            st.pyplot(fig)
+        elif opt_sel=="Plot estimations":
             # Plot the results on a graph
             fig, ax = plt.subplots(1, 2, figsize=(12, 6))
             # First plot
