@@ -1,20 +1,19 @@
 import streamlit as st
 
-from helpers.shared_hacks import page_setup
+import helpers.shared_hacks as shh
 
-page_setup("Sensibility analysis")
+shh.page_setup("Sensibility analysis")
 
 st.title("Direct Linear Plot")
 
 st.markdown("Select parameter estimation, data generation or both.")
 
-st.markdown("""Available equations:
-* Michaelis-Menten: 
-$$ v = \\frac{V_{max} S}{K_m + S}$$
-* Acompettive inhibition by S: 
-$$ v = \\frac{V_{max} S}{K_m + S + S^2/K_s}$$
-* Acompettive inhibition by P: 
-$$ v = \\frac{V_{max} S}{K_m ( 1 + \\frac{P}{K_i} ) + S}$$
-* Mixed inhibition:
-$$ v = \\frac{V_{max} S}{K_m ( 1 + \\frac{P}{K_i} ) + S ( 1 + \\frac{P}{K_j} )}$$
-""")
+# Construct the markdown
+mkd = """Available equations:"""
+for eqn_option in shh.EQUATION_OPTIONS:
+    latex_eqn = shh.latex_formula_from_equation_name(eqn_option)
+    mkd += f"\n* {eqn_option}"
+    mkd += f"\n{latex_eqn}"
+# Show the markdown
+print(mkd)
+st.markdown(mkd)

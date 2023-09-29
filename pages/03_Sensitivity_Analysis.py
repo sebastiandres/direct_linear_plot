@@ -3,9 +3,11 @@ import pandas as pd
 import numpy as np
 from matplotlib import pyplot as plt
 
-from helpers.shared_hacks import page_setup
+import helpers.shared_hacks as shh
 
-page_setup("Sensibility analysis")
+shh.page_setup("Sensibility analysis")
+eqn_sel = shh.equation_selection(debug=True)
+
 
 if "parameter_checksum" not in st.session_state:
     st.session_state["parameter_checksum"] = ""

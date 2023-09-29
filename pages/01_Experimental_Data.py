@@ -2,20 +2,12 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 from matplotlib import pyplot as plt
+from os.path import basename
 
-from helpers.shared_hacks import page_setup
+import helpers.shared_hacks as shh
 
-page_setup("Sensibility analysis")
-
-
-eqn_sel = st.sidebar.selectbox("Select equation", 
-                        [
-                        #"", 
-                        "Michaelis-Menten", 
-                        "Competitive Inhibition by S", 
-                        "Competitive Inhibition by P", 
-                        "Mixed Inhibition"],
-                        key="error_analysis_eqn_sel")
+shh.page_setup("Sensibility analysis")
+eqn_sel = shh.equation_selection()
 
 st.subheader("Parameter estimation")
 st.caption("Experimental data")
@@ -25,15 +17,27 @@ if eqn_sel == "Michaelis-Menten":
     from scripts.michaelis_menten import solver
     from scripts.michaelis_menten import v_generation
     
-    st.sidebar.markdown("""$$ v = \\frac{V_{max} S}{K_m + S}$$""")
-
     c1, c2 = st.columns(2)
     c2.markdown("");c2.markdown("") # For alignment
+
     with c2.expander("File format:"):
         st.markdown("Provide an excel file with the following structure")
         df = pd.DataFrame({"s": ["s_1", "s_2", "...", "s_n"], "v": ["v_1", "v_2", "...", "v_n"]})
         st.dataframe(df)
+        c1_expander, c2_expander = st.columns(2)
+        template_file = "data/template_MM.xlsx"
+        c1_expander.download_button("Download template", 
+                                    data=open(template_file, "rb").read(), 
+                                    file_name=basename(template_file)
+                                    )
+        example_file = "data/example_MM.xlsx"
+        c2_expander.download_button("Download example", 
+                                    data=open(example_file, "rb").read(), 
+                                    file_name=basename(example_file)
+                                    )
+
     uploaded_file = c1.file_uploader("Upload data file", type=["xlsx"])
+
     if uploaded_file is not None:
         xl_file = pd.ExcelFile(uploaded_file)
         # Get dataframes for all the sheets

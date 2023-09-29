@@ -3,9 +3,10 @@ import pandas as pd
 import numpy as np
 from matplotlib import pyplot as plt
 
-from helpers.shared_hacks import page_setup
+import helpers.shared_hacks as shh
 
-page_setup("Error analysis")
+shh.page_setup("Error analysis")
+eqn_sel = shh.equation_selection(debug=True)
 
 if "parameter_checksum" not in st.session_state:
     st.session_state["parameter_checksum"] = ""
@@ -14,15 +15,6 @@ if "error_analysis_execution" not in st.session_state:
 
 st.subheader("Error analysis")
 st.caption("Error analysis on synthetic data generated with known parameters")
-
-eqn_sel = st.sidebar.selectbox("Select equation", 
-                        [
-                        #"", 
-                        "Michaelis-Menten", 
-                        "Competitive Inhibition by S", 
-                        "Competitive Inhibition by P", 
-                        "Mixed Inhibition"],
-                        key="error_analysis_eqn_sel")
 
 if eqn_sel == "Michaelis-Menten":
     #c2.markdown("");c2.markdown("") # For alignment
