@@ -6,7 +6,7 @@ from matplotlib import pyplot as plt
 import helpers.shared_hacks as shh
 
 shh.page_setup("Error analysis")
-eqn_sel = shh.equation_selection(debug=True)
+eqn_sel = shh.equation_selection()
 
 if "parameter_checksum" not in st.session_state:
     st.session_state["parameter_checksum"] = ""
@@ -16,9 +16,9 @@ if "error_analysis_execution" not in st.session_state:
 st.subheader("Error analysis")
 st.caption("Error analysis on synthetic data generated with known parameters")
 
-if eqn_sel == "Michaelis-Menten":
-    #c2.markdown("");c2.markdown("") # For alignment
-    st.sidebar.markdown("""$$ v = \\frac{V_{max} s}{K_m + s}$$""")
+if eqn_sel == None:
+    st.warning("Please select an equation from the sidebar")
+elif eqn_sel == "Michaelis-Menten":
     # Parameters
     c1, c2, _, _ = st.columns(4)
     Vmax = c1.number_input("Vmax", value=1.0)
@@ -52,6 +52,7 @@ if eqn_sel == "Michaelis-Menten":
             ax.set_xlabel("s")
             ax.set_ylabel("v")
             ax.set_title("Synthetic data")
+            ax.set_ylim(0, 1.1*df_i["v"].max())
             st.pyplot(fig)
         elif opt_sel=="Plot estimations":
             # Plot the results on a graph

@@ -12,7 +12,9 @@ eqn_sel = shh.equation_selection()
 st.subheader("Parameter estimation")
 st.caption("Experimental data")
 
-if eqn_sel == "Michaelis-Menten":
+if eqn_sel == None:
+    st.warning("Please select an equation from the sidebar")
+elif eqn_sel == "Michaelis-Menten":
     
     from scripts.michaelis_menten import solver
     from scripts.michaelis_menten import v_generation
@@ -24,6 +26,7 @@ if eqn_sel == "Michaelis-Menten":
         st.markdown("Provide an excel file with the following structure")
         df = pd.DataFrame({"s": ["s_1", "s_2", "...", "s_n"], "v": ["v_1", "v_2", "...", "v_n"]})
         st.dataframe(df)
+        st.markdown("You can have multiple sheets in the same file. See the following template and example files.")
         c1_expander, c2_expander = st.columns(2)
         template_file = "data/template_MM.xlsx"
         c1_expander.download_button("Download template", 

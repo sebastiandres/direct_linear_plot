@@ -90,6 +90,7 @@ def sensitivity_analysis(Vmax, Km, mu, sigma, N, e_index, e_min, e_max, n_e=20):
     # Add perturbations to the data
     DLP = {}
     LR = {}
+    all_df = []
     for i in range(N):
         DLP[i] = {"Vmax": [], "Km": [], "Error": []}
         LR[i] = {"Vmax": [], "Km": [], "Error": []}
@@ -98,6 +99,7 @@ def sensitivity_analysis(Vmax, Km, mu, sigma, N, e_index, e_min, e_max, n_e=20):
         for error in e:
             df_i_error = df_i.copy()
             df_i_error.loc[e_index, "v"] = df_i_error.loc[e_index, "v"] + error # Perturbate e_index with the error
+            all_df.append(df_i_error)
             # Obtain the estimations
             solution = solver(df_i_error)
             # Store the results
@@ -108,7 +110,11 @@ def sensitivity_analysis(Vmax, Km, mu, sigma, N, e_index, e_min, e_max, n_e=20):
             LR[i]["Km"].append(solution["linear_regression"]["Km"])
             LR[i]["Error"].append(error)
     # Return the results
-    return DLP, LR
+    sensititivity_analysis = {}
+    sensititivity_analysis["data"] = pd.concat(all_df)
+    sensititivity_analysis["DLP"] = DLP
+    sensititivity_analysis["LR"] = LR
+    return sensititivity_analysis
 
 
 def data_perturbation(v, mu, sigma, e_index=None):

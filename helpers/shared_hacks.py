@@ -42,23 +42,18 @@ def equation_selection(debug=False):
 
 def latex_formula_from_equation_name(equation_name):
     if equation_name==EQUATION_OPTIONS[0]: # Michaelis-Menten
-        latex_formula = """
-        $$ v = \\frac{V_{max} S}{K_m + S}$$
+        latex_formula = """$$ v = \\frac{V_{max} S}{K_m + S}$$
         """
     elif equation_name==EQUATION_OPTIONS[1]: # Uncompetitive Inhibition by S
-        latex_formula = """
-        $$ v = \\frac{V_{max} S}{K_m + S + S^2/K_s}$$
+        latex_formula = """$$ v = \\frac{V_{max} S}{K_m + S + S^2/K_s}$$
         """
     elif equation_name==EQUATION_OPTIONS[2]: # Competitive Inhibition by P
-        latex_formula = """
-        $$ v = \\frac{V_{max} S}{K_m ( 1 + \\frac{P}{K_i} ) + S}$$
+        latex_formula = """$$ v = \\frac{V_{max} S}{K_m ( 1 + \\frac{P}{K_i} ) + S}$$
         """
     elif equation_name==EQUATION_OPTIONS[3]: # Uncompetitive Inhibition by P
-        latex_formula = """
-        $$ v = \\frac{V_{max} S}{K_m + S ( 1 + \\frac{P}{K_j} )}$$        
+        latex_formula = """$$ v = \\frac{V_{max} S}{K_m + S ( 1 + \\frac{P}{K_j} )}$$        
         """
     elif equation_name==EQUATION_OPTIONS[4]: # Mixed Inhibition by P
-        latex_formula = """
-        $$ v = \\frac{V_{max} S}{K_m ( 1 + \\frac{P}{K_i} ) + S ( 1 + \\frac{P}{K_j} )}$$        
+        latex_formula = """$$ v = \\frac{V_{max} S}{K_m ( 1 + \\frac{P}{K_i} ) + S ( 1 + \\frac{P}{K_j} )}$$        
         """
     return latex_formula
